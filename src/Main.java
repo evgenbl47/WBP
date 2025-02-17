@@ -5,6 +5,7 @@ public class Main {
         //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
         // to see how IntelliJ IDEA suggests fixing it.
         System.out.printf("Hello and welcome!\n");
+        System.out.println("\n");
 
         Product shirt = new Product("Shirt", 1500.0, 4.8);
         Product jeans = new Product("Jeans", 3500.0, 4.5);
