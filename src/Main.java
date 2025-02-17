@@ -20,6 +20,8 @@ public class Main {
         cart.showCart();
 
         cart.removeProduct(socks);
+        cart.removeProduct("Shirt");
+        cart.removeProduct("T-Shirt");
         cart.showCart();
     }
 }

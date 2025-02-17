@@ -10,8 +10,23 @@ public class Cart {
     }
 
     public void removeProduct(Product product) {
-        products.remove(product);
-        System.out.println(product.getName() + " remove from cart");
+        if (products.contains(product)) {
+            products.remove(product);
+            System.out.println(product.getName() + " remove from cart.");
+        } else {
+            System.out.println("Item: " + product.getName() + " not found in cart.");
+        }
+    }
+
+    public void removeProduct(String productName) {
+        for (int i = 0; i < products.size(); i++) {
+            if (products.get(i).getName().equals(productName)) {
+                products.remove(i);
+                System.out.println(productName + " remove from cart.");
+                return;
+            }
+        }
+        System.out.println("Item: " + productName + " not found in cart.");
     }
 
     public double getTotal() {
