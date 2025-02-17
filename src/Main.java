@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -80,21 +81,28 @@ public class Main {
     // Метод для отображения каталога
     private static void showCatalog(ProductCatalog catalog) {
         System.out.println("\n===== Каталог товаров =====");
-        for (Product product : catalog.getAllProducts()) {
-            System.out.println(product.getName() + " - " + product.getPrice() + " руб.");
+        List<Product> products = catalog.getAllProducts();
+        for (int i = 0; i < products.size(); i++) {
+            Product product = products.get(i);
+            System.out.println((i + 1) + ". " + product.getName() + " - " + product.getPrice() + " руб.");
         }
         System.out.println("==========================");
     }
 
-    // Метод для добавления товара в корзину
+// Метод для добавления товара в корзину
     private static void addProductToCart(ProductCatalog catalog, Cart cart, Scanner scanner) {
-        System.out.print("Введите название товара для добавления в корзину: ");
-        String productName = scanner.nextLine();
-        Product product = catalog.findProductByName(productName);
-        if (product != null) {
-            cart.addProduct(product);
-        } else {
-            System.out.println("Товар не найден в каталоге.");
+        System.out.print("Введите номер товара для добавления в корзину: ");
+        String productNumberStr = scanner.nextLine();
+        try {
+            int productNumber = Integer.parseInt(productNumberStr);
+            if (productNumber > 0 && productNumber <= catalog.getAllProducts().size()) {
+                Product product = catalog.getAllProducts().get(productNumber - 1);
+                cart.addProduct(product);
+            } else {
+                System.out.println("Неверный номер товара.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Неверный формат номера товара.");
         }
     }
 
