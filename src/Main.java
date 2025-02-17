@@ -39,5 +39,8 @@ public class Main {
         cart.removeProduct("Socks");
 
         cart.showCart();
+
+        Order order = new Order(cart, "Tom Smith", "US, New-York");
+        order.displayOrderDetails();
     }
 }
