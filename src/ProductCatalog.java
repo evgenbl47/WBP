@@ -9,6 +9,10 @@ public class ProductCatalog {
         System.out.println(product.getName() + " add to catalog.");
     }
 
+    public List<Product> getAllProducts() {
+        return new ArrayList<>(products); // Возвращаем копию списка
+    }
+
     public void removeProduct(String productName) {
         for (int i = 0; i < products.size(); i++) {
             if (products.get(i).getName().equals(productName)) {

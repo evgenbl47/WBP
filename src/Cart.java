@@ -53,6 +53,10 @@ public class Cart {
         }
         System.out.println("Итого: " + getTotal() + " руб.\n");
     }
+
+    public List<Product> getAllProducts() {
+        return new ArrayList<>(products); // Возвращаем копию списка
+    }
 }
 
 

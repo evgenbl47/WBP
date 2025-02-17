@@ -1,3 +1,5 @@
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Date;
 
 public class Order {
@@ -23,6 +25,23 @@ public class Order {
         System.out.println("Total price: " + totalAmount + " руб.");
         cart.showCart(); // Показываем товары в заказе
         System.out.println("=========================");
+    }
+
+    public void saveOrder(String filename) {
+        try (FileWriter writer = new FileWriter(filename, true)) { // true для добавления в конец файла
+            writer.write("Заказ от: " + customerName + "\n");
+            writer.write("Адрес доставки: " + shippingAddress + "\n");
+            writer.write("Дата заказа: " + orderDate + "\n");
+            writer.write("Сумма заказа: " + totalAmount + " руб.\n");
+            writer.write("Товары:\n");
+            for (Product product : cart.getAllProducts()) {
+                writer.write(product.getName() + " - " + product.getPrice() + " руб.\n");
+            }
+            writer.write("=========================\n");
+            System.out.println("Заказ сохранен в файл.");
+        } catch (IOException e) {
+            System.err.println("Ошибка при сохранении заказа: " + e.getMessage());
+        }
     }
 }
 
