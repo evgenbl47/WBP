@@ -6,6 +6,7 @@ public class Main {
         // to see how IntelliJ IDEA suggests fixing it.
         System.out.printf("Hello and welcome!\n");
         System.out.println("\n");
+        System.out.println();
 
         Product shirt = new Product("Shirt", 1500.0, 4.8);
         Product jeans = new Product("Jeans", 3500.0, 4.5);
