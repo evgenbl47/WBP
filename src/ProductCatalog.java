@@ -1,0 +1,32 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class ProductCatalog {
+    private List<Product> products = new ArrayList<>();
+
+    public void addProduct(Product product) {
+        products.add(product);
+        System.out.println(product.getName() + " add to catalog.");
+    }
+
+    public void removeProduct(String productName) {
+        for (int i = 0; i < products.size(); i++) {
+            if (products.get(i).getName().equals(productName)) {
+                products.remove(i);
+                System.out.println(productName + " removed from catalog.");
+                return;
+            }
+        }
+        System.out.println("Item " + productName + " not found in catalog");
+    }
+
+    public Product findProductByName(String productName) {
+        for (Product product : products) {
+            if (product.getName().equals(productName)) {
+                return product;
+            }
+        }
+        return null;
+    }
+
+}

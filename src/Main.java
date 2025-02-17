@@ -5,23 +5,39 @@ public class Main {
         //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
         // to see how IntelliJ IDEA suggests fixing it.
         System.out.printf("Hello and welcome!\n");
-        System.out.println("\n");
-        System.out.println();
+
+        ProductCatalog catalog = new ProductCatalog();
 
         Product shirt = new Product("Shirt", 1500.0, 4.8);
         Product jeans = new Product("Jeans", 3500.0, 4.5);
         Product socks = new Product("Socks", 13500.0, 0.5);
 
+        catalog.addProduct(shirt);
+        catalog.addProduct(jeans);
+        catalog.addProduct(socks);
+
         Cart cart = new Cart();
-        cart.addProduct(shirt);
-        cart.addProduct(jeans);
-        cart.addProduct(socks);
+
+        Product foundShirt = catalog.findProductByName("Shirt");
+        if (foundShirt != null) {
+            cart.addProduct(foundShirt);
+        }
+
+        Product foundJeans = catalog.findProductByName("Jeans");
+        if (foundJeans != null) {
+            cart.addProduct(foundJeans);
+        }
+
+        Product foundSocks = catalog.findProductByName("Socks");
+        if (foundSocks != null) {
+            cart.addProduct(foundSocks);
+        }
+
 
         cart.showCart();
 
-        cart.removeProduct(socks);
-        cart.removeProduct("Shirt");
-        cart.removeProduct("T-Shirt");
+        cart.removeProduct("Socks");
+
         cart.showCart();
     }
 }
