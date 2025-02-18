@@ -1,135 +1,99 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+    private static UserManager userManager = new UserManager();
+    private static CatalogManager catalogManager = new CatalogManager();
+
     public static void main(String[] args) {
-        // Создаем экземпляр DataStorage
-        DataStorage dataStorage = new DataStorage();
+        catalogManager.loadCatalog();
 
-        // Загружаем каталог товаров
-        ProductCatalog catalog = dataStorage.loadCatalog();
-
-        // Если каталог пустой, создаем новый и заполняем его
-        if (catalog.getAllProducts().isEmpty()) {
-            System.out.println("Каталог товаров не найден. Создаем новый каталог.");
-            catalog = createDefaultCatalog();
-        }
-
-        // Создаем корзину
-        Cart cart = new Cart();
-
-        // Создаем Scanner для ввода пользователя
         Scanner scanner = new Scanner(System.in);
 
-        // Главный цикл программы
         while (true) {
-            displayMenu();
-            System.out.print("Выберите действие: ");
-            String choice = scanner.nextLine();
+            if (userManager.getCurrentUser() == null) {
+                displayGuestMenu();
+            } else {
+                displayUserMenu();
+            }
 
-            switch (choice) {
-                case "1":
-                    showCatalog(catalog);
-                    break;
-                case "2":
-                    addProductToCart(catalog, cart, scanner);
-                    break;
-                case "3":
-                    removeProductFromCart(cart, scanner);
-                    break;
-                case "4":
-                    viewCart(cart);
-                    break;
-                case "5":
-                    checkout(cart, scanner);
-                    break;
-                case "0":
-                    // Сохраняем каталог перед выходом
-                    dataStorage.saveCatalog(catalog);
-                    System.out.println("Выход из программы.");
-                    return;
-                default:
-                    System.out.println("Неверный выбор. Попробуйте еще раз.");
+            System.out.println("Choice action: ");
+            String choise = scanner.nextLine();
+
+            if (userManager.getCurrentUser() == null) {
+                handleGuestActions(choise, scanner);
+            } else {
+                handleUserActions(choise, scanner);
             }
         }
     }
 
-    // Метод для создания каталога по умолчанию
-    private static ProductCatalog createDefaultCatalog() {
-        ProductCatalog catalog = new ProductCatalog();
-        Product shirt = new Product("Футболка", 1500.0, 4.8);
-        Product jeans = new Product("Джинсы", 3500.0, 4.5);
-        Product hat = new Product("Кепка", 800.0, 4.2);
-        catalog.addProduct(shirt);
-        catalog.addProduct(jeans);
-        catalog.addProduct(hat);
-        return catalog;
+
+    // Меню для неавторизованных пользователей
+    private static void displayGuestMenu() {
+        System.out.println("\n===== Wildberries (Консоль) =====");
+        System.out.println("1. Регистрация");
+        System.out.println("2. Вход");
+        System.out.println("0. Выход");
+        System.out.println("==================================");
     }
 
-    // Метод для отображения меню
-    private static void displayMenu() {
+    // Меню для авторизованных пользователей
+    private static void displayUserMenu() {
         System.out.println("\n===== Wildberries (Консоль) =====");
         System.out.println("1. Показать каталог товаров");
         System.out.println("2. Добавить товар в корзину");
         System.out.println("3. Удалить товар из корзины");
         System.out.println("4. Показать корзину");
         System.out.println("5. Оформить заказ");
-        System.out.println("0. Выход");
+        System.out.println("6. Личный кабинет");
+        System.out.println("0. Выход из аккаунта");
         System.out.println("==================================");
     }
 
-    // Метод для отображения каталога
-    private static void showCatalog(ProductCatalog catalog) {
-        System.out.println("\n===== Каталог товаров =====");
-        List<Product> products = catalog.getAllProducts();
-        for (int i = 0; i < products.size(); i++) {
-            Product product = products.get(i);
-            System.out.println((i + 1) + ". " + product.getName() + " - " + product.getPrice() + " руб.");
-        }
-        System.out.println("==========================");
-    }
-
-// Метод для добавления товара в корзину
-    private static void addProductToCart(ProductCatalog catalog, Cart cart, Scanner scanner) {
-        System.out.print("Введите номер товара для добавления в корзину: ");
-        String productNumberStr = scanner.nextLine();
-        try {
-            int productNumber = Integer.parseInt(productNumberStr);
-            if (productNumber > 0 && productNumber <= catalog.getAllProducts().size()) {
-                Product product = catalog.getAllProducts().get(productNumber - 1);
-                cart.addProduct(product);
-            } else {
-                System.out.println("Неверный номер товара.");
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("Неверный формат номера товара.");
+    private static void handleGuestActions(String choise, Scanner scanner) {
+        switch (choise) {
+            case "1":
+                userManager.registerUser(scanner);
+                break;
+            case "2":
+                userManager.loginUser(scanner);
+                break;
+            case "0":
+                System.out.println("Exit program.");
+                System.exit(0);
+                break;
+            default:
+                System.out.println("Wrong choose, try again");
         }
     }
 
-    // Метод для удаления товара из корзины
-    private static void removeProductFromCart(Cart cart, Scanner scanner) {
-        System.out.print("Введите название товара для удаления из корзины: ");
-        String productName = scanner.nextLine();
-        cart.removeProduct(productName);
-    }
-
-    // Метод для просмотра корзины
-    private static void viewCart(Cart cart) {
-        cart.showCart();
-    }
-
-    // Метод для оформления заказа
-    private static void checkout(Cart cart, Scanner scanner) {
-        System.out.print("Введите ваше имя: ");
-        String customerName = scanner.nextLine();
-        System.out.print("Введите адрес доставки: ");
-        String shippingAddress = scanner.nextLine();
-
-        Order order = new Order(cart, customerName, shippingAddress);
-        order.displayOrderDetails();
-        order.saveOrder("orders.txt");
-
-        // Очищаем корзину после оформления заказа
-        cart = new Cart();
+    private static void handleUserActions(String choise, Scanner scanner) {
+        switch (choise) {
+            case "1":
+                catalogManager.showCatalog();
+                break;
+            case "2":
+                catalogManager.addProductToCart(scanner);
+                break;
+            case "3":
+                catalogManager.removeProductFromCart(scanner);
+                break;
+            case "4":
+                catalogManager.viewCart();
+                break;
+            case "5":
+                catalogManager.checkOut(scanner);
+                break;
+            case "6":
+                System.out.println("Personal account: " + userManager.getCurrentUser());
+                break;
+            case "0":
+                userManager.logoutUser();
+                break;
+            default:
+                System.out.println("Wrong choose, try again.");
+        }
     }
 }
