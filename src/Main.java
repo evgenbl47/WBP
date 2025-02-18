@@ -8,7 +8,7 @@ public class Main {
 
     public static void main(String[] args) {
         catalogManager.loadCatalog();
-
+        System.out.println(" ");
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
